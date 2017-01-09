@@ -1,62 +1,45 @@
-<?php session_start();?>
+<?php session_start(); ?>
 
-<?php 
-if(!isset($_SESSION['valid'])){
+<?php
+if(!isset($_SESSION['valid'])) {
 	header('Location: login.php');
 }
 ?>
 
 <?php
-include('db.php');
+//including the database connection file
+include_once("db.php");
 
-
+//fetching data in descending order (lastest entry first)
 $result = mysqli_query($conn, "SELECT * FROM items WHERE login_id=".$_SESSION['id']." ORDER BY id DESC");
 ?>
 
-<!DOCTYPE html>
 <html>
 <head>
-	<title>VIEW PAGE</title>
+	<title>Homepage</title>
+	<?php include('src.php');?>
 </head>
+
 <body>
-
-<a href="index.php">Home</a> | <a href="add.html">NEW DATA</a> | <a href="logout.php">Logout</a><br>
-
-
-<table>
-	<tr>
-		<td>NAME</td>
-		<td>Quantity</td>
-		<td>Cost</td>
-		<td>Update</td>
-	</tr>
-	<?php
-	while($res = mysqli_fetch_array($result)){
-?>
-		<tr>
-		<td><?php $res['name'];?></td>
-		<td><?php $res['qty'];?></td>
-		<td><?php $res['cost'];?></td>
-		<td><a href=\"edit.php?id=<?php $res[id];?>\">Edit</a> | <a href=\"delete.php?id=<?php $res[id];?>\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a></td></td>
-
+	<a href="index.php">Home</a> | <a href="add.html">Add New Data</a> | <a href="logout.php">Logout</a>
+	<br/><br/>
+	
+	<table width='80%' border=0>
+		<tr bgcolor='#CCCCCC'>
+			<td>Name</td>
+			<td>Quantity</td>
+			<td>Price (in Rs)</td>
+			<td>Update</td>
 		</tr>
-
-	<?php
-	}
-
-	?>
-
-
-
-
-
-
-
-
-
-
-</table>
-
-
+		<?php
+		while($res = mysqli_fetch_array($result)) {		
+			echo "<tr>";
+			echo "<td>".$res['name']."</td>";
+			echo "<td>".$res['qty']."</td>";
+			echo "<td>".$res['price']."</td>";	
+			echo "<td><a href=\"edit.php?id=$res[id]\">Edit</a> | <a href=\"delete.php?id=$res[id]\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a></td>";		
+		}
+		?>
+	</table>	
 </body>
 </html>
